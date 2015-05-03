@@ -2,19 +2,15 @@ package io.collap.components;
 
 import java.util.function.Supplier;
 
-/**
- * A chain is just a component itself. The fact that it chains together components to get from an
- * input value to a result is the implementation detail of this particular component, it does not
- * affect its status as a Component.
- */
 public interface ChainBuilder<T, R> {
 
     /**
      * Appends a factory to the chain, which is polled to create a new Component
      * each time the chain is executed.
+     * @param type The class type of the Component which is produces by 'factory'.
      * @return This object for chaining.
      */
-    ChainBuilder<T, R> append(Supplier<? extends Component<?, ?>> factory);
+    ChainBuilder<T, R> append(Supplier<? extends Component> factory, Class<? extends Component> type);
 
     /**
      * Appends a Component class to the chain, which must have a constructor
@@ -22,13 +18,13 @@ public interface ChainBuilder<T, R> {
      * Component of this type is instantiated and applied.
      * @return This object for chaining.
      */
-    ChainBuilder<T, R> append(Class<? extends Component<?, ?>> type);
+    ChainBuilder<T, R> append(Class<? extends Component> type);
 
     /**
      * This method can only be called once per instance of a ChainBuilder. Any subsequent
      * calls yield undefined behaviour.
      * @return A supplier which acts as a factory for new instances of the Component.
      */
-    Supplier<Component<T, R>> build();
+    Supplier<Chain<T, R>> build();
 
 }

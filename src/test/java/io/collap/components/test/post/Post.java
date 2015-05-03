@@ -1,4 +1,4 @@
-package io.collap.components.post;
+package io.collap.components.test.post;
 
 public class Post {
 

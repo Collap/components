@@ -1,6 +1,6 @@
-package io.collap.components.post;
+package io.collap.components.test.post;
 
-import io.collap.components.Component;
+import io.collap.components.Chain;
 import io.collap.components.ReflectionChainBuilder;
 import org.junit.Test;
 
@@ -10,12 +10,12 @@ public class PostTest {
 
     @Test
     public void test() {
-        Supplier<Component<Integer, String>> chain =
+        Supplier<Chain<Integer, String>> chainFactory =
                 new ReflectionChainBuilder<Integer, String>()
                 .append(GetPost.class)
                 .append(ShowPost.class)
                 .build();
-        System.out.println(chain.get().apply(5));
+        System.out.println(chainFactory.get().execute(5));
     }
 
 }

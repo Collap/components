@@ -1,11 +1,12 @@
-package io.collap.components.post;
+package io.collap.components.test.post;
 
 import io.collap.components.Component;
+import io.collap.components.Entry;
 
-public class ShowPost implements Component<Post, String> {
+public class ShowPost implements Component {
 
-    @Override
-    public String apply(Post value) {
+    @Entry
+    public String render(Post value) {
         return  "<html>" +
                     "<head>" +
                         "<title>" + value.getTitle() + "</title>" +

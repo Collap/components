@@ -1,0 +1,57 @@
+// We need this directive to create the chain(s) in the right package.
+package com.example.chain
+
+// To use Java classes from the classpath, you need to import them.
+// You can not use their full name directly, like you can in Java.
+import class com.example.component.*
+
+// You can also import other chains. The signatures of these chains need to be 
+// known by the compiler. If we want to include chains from the same project,
+// the compiler can simply parse and index the other source files and compile
+// the chains that are dependencies of other chains. Circular dependencies 
+// should not be an issue in respect to inference, since chains are (currently) 
+// linear and can't call each other without producing an endless loop.
+// If we want to include chains from other projects, we need access to the 
+// class files and the chains need to be annotated with input and output 
+// information (the types can probably be inferred, but the field names of the 
+// output tuple can not be gathered from a plain method).
+import chain some.library.chain.*
+
+
+// Multiple chains can be defined in a single file.
+// Specifying input and output is possible. Types can usually be inferred,
+// but you can specify a name for both input and output values.
+// The names of output values can be used to select them and thus discard
+// other output values. In the same style, input values can be specified
+// out of order if their names are known.
+LoadAndShowPost[id -> html]: 
+    GetPost | ShowPost
+
+ShowPostEditor[id -> html]:
+    // In this scenario, ConvertToMap is a "predefined" component that takes all
+    // public fields of an object (or fields of other criteria) and puts them in
+    // a Map. ShowEditor takes some Map and produces a form that is appropriate 
+    // to handle each value of the map. Whether this works in such a generic way
+    // and whether it performs well is a topic for another discussion.
+    GetPost | ConvertToMap | ShowEditor
+    
+ConfirmPostEdit[form -> html]:
+    // In the chain above, we might have a problem to create a generic solution.
+    // This would be the case here as well, so the following would be the direct
+    // solution.
+    // That this is a one-component chain is a bit strange, so once we define
+    // how chains can actually be used, maybe we can simplify the syntax a bit.
+    // Even chains with only one component are viable, because they can be 
+    // called without reflection (Unless you know the component, of course, in
+    // which case you can just directly call the @Entry function).
+    EditPost
+
+// Now here is a chain with a minimum of extra information:
+ShowPostEditorMin:
+    GetPost | ConvertToMap | ShowEditor
+    
+// And now the same chain with as much information as possible:
+ShowPostEditorMax[Integer id -> String html]:
+      GetPost[Integer -> Post]
+    | ConvertToMap[Post -> Map<?>]
+    | ShowEditor[Map<?> -> String]

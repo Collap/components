@@ -1,0 +1,27 @@
+package com.example.chain
+
+import class com.example.component.*
+
+
+// The following example is, of course, artificial, you would never calculate
+// a quadratic polynomial like this or create these components. 
+// This shows the parallel() and fold() commands and the ToList component.
+// Calculates: res = a*x^2 + b*x + c
+CalculateQuadraticPolynomial[Double a, Double b, Double c, Double x -> Double res]:
+    parallel(
+        (a, (x, 2 | pow) | mul),
+        (b, x | mul),
+        c
+    )
+    | ToList
+    | fold(add)
+
+
+// This example demonstrates selecting a single element from a tuple.
+Remainder[int a, int b -> int res]:
+    div.rem     // div[int a, int b -> int res, int rem]
+    
+// You can also select multiple elements from a tuple, effectively discarding 
+// some elements or rearranging a tuple.
+Select[int a -> int b, int c]:
+    Generate[int -> int foo, int bar, int bear].(foo, bear)
